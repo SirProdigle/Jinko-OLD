@@ -23,8 +23,18 @@ module.exports = {
     SetExpressVariables: (app) => {
         config.functions.LogStartup("Express Variable Setup Begin");
         app.set('views', config.views.directory); //Set view path, eg rendering users/index renders path/users/index
-        app.set('view engine', config.views.engine); //Set view engine to create dynamic html
-        app.use(express.static(config.web.publicFolder)); //Set our Public folder for images/js/css
+        if (config.views.engine === "express-hbs") {
+            const hbs = require('express-hbs');
+            // Use `.hbs` for extensions and find partials in `views/partials`.
+            app.engine('hbs', hbs.express4({
+                partialsDir: config.views.directory + '/Partials'
+            }));
+            app.set('view engine', 'hbs');
+        }
+        else {
+            app.set('view engine', config.views.engine); //Set view engine to create dynamic html
+        }
+        app.use(express.static(config.web.publicFolder)); //Set our Public folder for img/js/css
         app.use(helmet()); //Helmet sets up a lot of security variables
         config.functions.LogStartup("Express Variable Setup End");
     },
@@ -53,13 +63,24 @@ module.exports = {
     },
 
     ForceHTTPS: (app) => {
-        const redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
-        app.use(redirectToHTTPS(app.use(redirectToHTTPS([/localhost:(\d{4})/]))));
+        if(config.web.forceHTTPS) {
+            app.enable('trust proxy');
+            app.use(function (req, res, next) {
+                if (req.secure) {
+                    // request was via https, so do no special handling
+                    next();
+                } else {
+                    // request was via http, so redirect to https
+                    res.redirect('https://' + req.headers.host + req.url);
+                }
+            });
+        }
+
     },
 
-    StartWebServer: (app) =>{
+    StartWebServer: (app) => {
         config.functions.LogStartup("Starting Web Server");
-        http.createServer(app).listen(config.web.port, function(){
+        http.createServer(app).listen(config.web.port, function () {
             config.functions.LogStartup('Web Server launched on port ' + config.web.port);
         });
 

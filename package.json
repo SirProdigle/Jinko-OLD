@@ -12,8 +12,7 @@
     "debug": "~2.6.9",
     "dotenv": "^5.0.1",
     "express": "~4.16.0",
-    "express-http-to-https": "^1.1.4",
-    "handlebars": "^4.0.11",
+    "express-hbs": "^1.0.4",
     "helmet": "^3.12.1",
     "http-errors": "~1.6.2",
     "minimist": "latest",
@@ -27,5 +26,9 @@
     "make-model": "System/bin/MakeModel.js",
     "make-timer": "System/bin/MakeTimer.js",
     "make-event": "System/bin/MakeEvent.js"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^4.0.1"
   }
 }

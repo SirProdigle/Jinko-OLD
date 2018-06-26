@@ -7,7 +7,7 @@ class HomeController extends Controller{
         super("");
 
         this.router.get('/', function (req, res) {
-            res.send('Index page for /')
+            res.render('index', { title: 'Hey', message: 'Hello there!' })
         });
     }
 

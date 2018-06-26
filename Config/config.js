@@ -6,11 +6,12 @@ const config = {};
 config.web = {
     port: 8080, //Port the server runs on
     publicFolder: path.join(__dirname, 'Public'), //Folder where public assets are
+    forceHTTPS: true
 };
 
 config.views = {
-    directory: __dirname + '/Views', //Base directory for views
-    engine: "handlebars", //View engine
+    directory:process.cwd() +'/Resources/Views', //Base directory for views
+    engine: "express-hbs", //View engine
 };
 
 config.db = {
